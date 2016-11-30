@@ -1,0 +1,149 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: 通讯录接口
+# during dev, should point to your local machine
+host: localhost:10010
+# basePath prefixes all resource paths 
+basePath: /
+# 
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+  - text/xml
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+  - text/html
+paths:
+  /addressList:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: addressList
+    get:
+      description: 按类型查找通讯录
+      # used as the method name of the controller
+      operationId: getALByType
+      parameters:
+        - name: type
+          in: query
+          description: 类型名称
+          required: false
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/HelloWorldResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      description: 添加通讯录
+      operationId: addAddressList
+      parameters:
+        - name: addressList
+          in: body
+          description: 添加通讯录
+          schema:
+            $ref: '#/definitions/AddressList'
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/HelloWorldResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    put:
+      description: 收藏/取消收藏通讯录
+      operationId: toggleFavorite
+      parameters:
+        - name: addressList
+          in: body
+          schema:
+            properties:
+              id:
+                type: integer
+                description: 主键ID
+          required: true
+      responses:
+        "200":
+          description: 更新通讯录
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/HelloWorldResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /addressList/{id}:
+    x-swagger-router-controller: addressList
+    get:
+      description: 获取指定通讯录详情
+      operationId: getAddressList
+      parameters:
+        - name: id
+          in: path
+          description: 通讯录id
+          required: true
+          type: integer
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/AddressList"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /swagger:
+    x-swagger-pipe: swagger_raw
+# complex objects have schema definitions
+definitions:
+  AddressList:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: 主键ID
+      name:
+        type: string
+        description: 姓名 
+      description:
+        type: string
+        description: 描述
+      mobile:
+        type: string
+        description: 手机号码
+      email:
+        type: string
+        description: 电子邮件
+      favorite:
+        type: boolean
+        description: 是否收藏
+  HelloWorldResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
