@@ -118,18 +118,18 @@ definitions:
     type: object
     properties:
       id:
-        type: integer
+        type: string
         description: 主键ID
       name:
         type: string
         description: 姓名 
-      description:
+      desc:
         type: string
         description: 描述
-      mobile:
+      tel:
         type: string
         description: 手机号码
-      email:
+      mail:
         type: string
         description: 电子邮件
       favorite:
